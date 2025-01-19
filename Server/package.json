@@ -4,14 +4,17 @@
   "description": "Service to scrape real time stories from Hacker News.",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.7.9",
     "cheerio": "^1.0.0",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "mysql2": "^3.12.0"
   }
 }

@@ -1,25 +1,55 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
+import socketIOClient from "socket.io-client";
 import './App.css';
 
-function App() {
+const App = () => {
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Connect to WebSocket server
+    const socket = socketIOClient("http://127.0.0.1:5000");
+
+    socket.on("newStories", (newStories) => {
+      console.log("Received initial stories:", newStories);
+      setStories(newStories);
+      setLoading(false);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Hacker News Real-time Updates</h1>
+      {loading ? (
+        <p>Loading stories...</p>
+      ) : (
+        <div>
+          {stories.length > 0 ? (
+            stories.map((story, index) => (
+              <div key={index} className="story">
+                <h3>{story.title}</h3>
+                <p>
+                  <a href={story.link} target="_blank" rel="noopener noreferrer">
+                    {story.link || "No link available"}
+                  </a>
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>No stories available.</p>
+          )}
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
